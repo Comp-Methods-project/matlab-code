@@ -151,5 +151,13 @@ imshow(c_imadjust)
 figure(9)
 imshow(d_imadjust)
 
+%% Tanner 4/13/20 
+% this is purely for viewing the slices in 3D
+D = cat(3,a,b,c,d);
+figure
+colormap gray
+contourslice(D,[],[],[1,2,3,4,27],15);
+view(3)
+axis tight
 
 
