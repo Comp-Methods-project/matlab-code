@@ -164,3 +164,159 @@ colormap gray
 contourslice(D,[],[],[1,2,3,4,27],15);
 view(3)
 axis tight
+
+
+%% Gunjan 4/14/20
+
+
+clear
+clc
+% building on top of Andrew's brightness image code
+
+a = dicomread('IM-0001-0001.dcm');
+a_imadjust = imadjust(a);
+a_histeq = histeq(a);
+a_adapthisteq = adapthisteq(a);
+
+
+
+figure(5)
+imshow(a_imadjust)% This is the best way to improve contrast that I have found
+% NEW CODE FROM HERE ONWARDS
+axis on;
+title('Original MRI image');
+set(gcf,'Position',get(0,'Screensize')); %Maximizing the figure
+
+%Now asking user to draw on the image, after which we will apply a mask
+message =sprintf('Left click the mouse to begin drawing.\n Stop holding the mouse button to finish');
+uiwait(msgbox(message));
+ROI_a = imfreehand; %Line of code from Andrew that does the drawing
+binaryImage = ROI_a.createMask; %This is creating a mask from the ROI
+%Mask is basically a binary image of the ROI
+xy=ROI_a.getPosition;
+
+
+%using subplots to show more images
+subplot(2,3,1);
+imshow(a_imadjust,[]);
+axis on;
+drawnow;
+title('Original MRI image');
+
+
+% Now we display the mask that drawn by user
+subplot(2,3,2);
+imshow(binaryImage);
+axis on;
+title('Binary mask of the MRI image');
+
+% Time to label the MRI image and compute the centroid and center of mass
+labeledImage=bwlabel(binaryImage);
+measurements = regionprops(binaryImage,a_imadjust, 'area','Centroid','WeightedCentroid','Perimeter');
+area = measurements.Area;
+centroid = measurements.Centroid;
+centerofMass = measurements.WeightedCentroid;
+perimeter = measurements.Perimeter;
+
+
+% Calculating the area from the pixels selected by user
+numberofPixels1=sum(binaryImage(:))
+numberofPixels2=bwarea(binaryImage)
+
+% Getting the coordinates of the boundary of MRI region selected by the
+% user
+structBoundaries = bwboundaries(binaryImage);
+xy= structBoundaries{1}; % This gives us a n by 2 arry of x and y coordinates
+x = xy(:,2); % Column of interest
+y = xy(:,1); % row of interest
+subplot(2,3,1); % plotting over the original image
+hold on;
+plot(x,y,'LineWidth',2);
+drawnow; % forcing matlab to draw it asap
+
+
+% Now we are burning line into image by setting it to 255 wherever the mask
+% is true
+burnedImage = a_imadjust;
+burnedImage(binaryImage) = 255;
+
+
+% Here we are displaying the image with the mask burned in
+subplot(2,3,3);
+imshow(burnedImage);
+axis on;
+caption = sprintf('New image with mask \n burned into image');
+title(caption);
+
+
+%Now keeping only the part of the image that is inside the mask
+blackMaskedImage=a_imadjust;
+blackMaskedImage(~binaryImage) = 0;
+subplot(2,3,4);
+imshow(blackMaskedImage);
+axis on;
+title('Masked Outside Region');
+
+% Calculating the mean
+meanGL=mean(blackMaskedImage(binaryImage));
+sdGL = std(double(blackMaskedImage(binaryImage)));
+
+% Placing markeers at the centroid and center of mass
+hold on;
+plot(centroid(1),centroid(2),'b+','MarkerSize',20,'LineWidth',2);
+plot(centerofMass(1),centerofMass(2),'g+','MarkerSize',10,'LineWidth',2);
+
+% Blackening inside the region
+insideMasked = a_imadjust;
+insideMasked(binaryImage) = 0;
+subplot(2,3,5);
+imshow(insideMasked);
+axis on;
+title('Masked inside region');
+
+
+% Cropping the image
+leftColumn = min(x);
+rightColumn = max(x);
+topLine = min(y);
+bottomLine = max(y);
+width = rightColumn - leftColumn + 1;
+height = bottomLine - topLine + 1;
+croppedImage = imcrop(blackMaskedImage,[leftColumn,topLine,width,height]);
+
+
+% displaying cropped image
+subplot(2,3,6);
+imshow(croppedImage);
+axis 'on'
+title('Cropped Image');
+
+% Placing crosses at the centroid and center of mass
+hold on;
+plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth',2);
+plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
+
+% report the results of the calculation
+message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.', meanGL,sdGL,numberofPixels1,numberofPixels2,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2));
+msgbox(message);
+
+
+
+
+
+% b_imadjust = imadjust(b);
+% c_imadjust = imadjust(c);
+% d_imadjust = imadjust(d);
+% 
+% figure(6)
+% imshow(b_imadjust)
+% ROI_b = drawfreehand;
+% 
+% figure(7)
+% imshow(c_imadjust)
+% ROI_c = drawfreehand;
+% 
+% figure(8)
+% imshow(d_imadjust)
+% ROI_d = drawfreehand;
+
