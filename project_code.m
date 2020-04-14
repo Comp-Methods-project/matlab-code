@@ -123,7 +123,7 @@ else
     return;
 end
 
-%% 4/12/20 Andrew
+%% 4/12/20 Andrew (updated 4/13 with imfreehand commands)
 
 % trying out different image adjustment techniques to improve contrast
 
@@ -132,24 +132,29 @@ a_imadjust = imadjust(a);
 a_histeq = histeq(a);
 a_adapthisteq = adapthisteq(a);
 
-figure(5)
-montage({a,a_imadjust,a_histeq,a_adapthisteq},'Size',[1 4])
+% figure(5)
+% montage({a,a_imadjust,a_histeq,a_adapthisteq},'Size',[1 4])
+% This was just to show the different options. Commenting out for now
 
-figure(6)
+figure(5)
 imshow(a_imadjust) % This is the best way to improve contrast that I have found
+ROI_a = imfreehand;
 
 b_imadjust = imadjust(b);
 c_imadjust = imadjust(c);
 d_imadjust = imadjust(d);
 
-figure(7)
+figure(6)
 imshow(b_imadjust)
+ROI_b = imfreehand;
+
+figure(7)
+imshow(c_imadjust)
+ROI_c = imfreehand;
 
 figure(8)
-imshow(c_imadjust)
-
-figure(9)
 imshow(d_imadjust)
+ROI_d = imfreehand;
 
 %% Tanner 4/13/20 
 % this is purely for viewing the slices in 3D
@@ -159,5 +164,3 @@ colormap gray
 contourslice(D,[],[],[1,2,3,4,27],15);
 view(3)
 axis tight
-
-
