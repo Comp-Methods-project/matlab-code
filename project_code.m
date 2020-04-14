@@ -166,7 +166,9 @@ view(3)
 axis tight
 
 
-%% Gunjan 4/14/20
+%% Gunjan 4/14/20 
+% Code that outputs mean value of ROI, SD of ROI, area in pixels,
+% perimeter, Centroid, and Center of mass
 
 
 clear
