@@ -71,37 +71,7 @@ ROI_d = imfreehand;
 % this is purely for viewing the slices in 3D
 D = cat(3,a,b,c,d);
 
-cubic_pixels = nnz(D)
-width = 512; % width and height of all 4 images are the same
-height = 368;
-bitDepth = 12;
-% Bit detph represents number of integer levels used to encode intensity in
-% an image. A 1 bit image has only 2 possible values: 0 or 1. 2 bit image
-% has 4 possible values: 0,1,2, and 3. With 12 bit image, we have 4096
-% possible values. 
 
-sliceThickness = 4; %in mm
-sliceSpacing = 4; % in mm
-% slice spacing is called "spacing between splices" in dicom metadata.
-% After lots of googling, it is my understanding that when spacing of
-% splices and slicethickness are the same value, it means that the slices
-% were taken contiguously. As in, there is no gap between the slices. If
-% the slice spacing value was smaller than thickness, that would have meant
-% overlap between slices. If the spacing value was larger, that would have
-% meant gap between slices. 
-
-% We only need to consider splice thickness for z value
-
-info2.PixelSpacing;
-% ans =
-% 
-%     0.6250 ; in mm
-%     0.6250 ; in mm
-
-
-% PixelSpacing is another parameter available in dicom metadata.
-% The first value is the vertical spacing between two adjacent pixels
-% The second value is horizontal spacing between two adjacent pixels.
 
 figure
 colormap gray
@@ -526,4 +496,44 @@ msgbox(message);
 % figure(8)
 % imshow(d_imadjust)
 % ROI_d = drawfreehand;
+
+
+
+%% 4/24/20 Gunjan update
+
+% run the top segment first; and then initialize below
+
+
+D = cat(3,a,b,c,d);
+cubic_pixels = nnz(D)
+width = 512; % width and height of all 4 images are the same
+height = 368;
+bitDepth = 12;
+% Bit detph represents number of integer levels used to encode intensity in
+% an image. A 1 bit image has only 2 possible values: 0 or 1. 2 bit image
+% has 4 possible values: 0,1,2, and 3. With 12 bit image, we have 4096
+% possible values. 
+
+sliceThickness = 4; %in mm
+sliceSpacing = 4; % in mm
+% slice spacing is called "spacing between splices" in dicom metadata.
+% After lots of googling, it is my understanding that when spacing of
+% splices and slicethickness are the same value, it means that the slices
+% were taken contiguously. As in, there is no gap between the slices. If
+% the slice spacing value was smaller than thickness, that would have meant
+% overlap between slices. If the spacing value was larger, that would have
+% meant gap between slices. 
+
+% We only need to consider splice thickness for z value
+
+info2.PixelSpacing;
+% ans =
+% 
+%     0.6250 ; in mm
+%     0.6250 ; in mm
+
+
+% PixelSpacing is another parameter available in dicom metadata.
+% The first value is the vertical spacing between two adjacent pixels
+% The second value is horizontal spacing between two adjacent pixels.
 
