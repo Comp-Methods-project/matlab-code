@@ -27,102 +27,13 @@ imagesc(d)
 colormap gray
 axis image
 
-
-%% 4/6/20 Gunjan test code.Anisotropic diffusion filter applied to figure 1
-clear
-clc
-a = dicomread('IM-0001-0001.dcm');
-b = dicomread('IM-0001-0002.dcm');
-c = dicomread('IM-0001-0003.dcm');
-d = dicomread('IM-0001-0004.dcm');
-
-
-subplot(2,1,1)
-
-imagesc(a)
-colormap gray
-axis image
-% 
-% figure(2)
-% imagesc(b)
-% colormap gray
-% axis image
-% 
-% figure(3)
-% imagesc(c)
-% colormap gray
-% axis image
-% 
-% figure(4)
-% imagesc(d)
-% colormap gray
-% axis image
-
-% new code from here onwards
-image3d = cat(3, a,b,c,d);
-% combined matrix from all 4 images. Not sure that this is all that useful
-% , so far
+info1 = dicominfo('IM-0001-0001.dcm'); % this is to extract metadata about the width and height of the images
+info2 = dicominfo('IM-0001-0002.dcm');
+info3 = dicominfo('IM-0001-0003.dcm');
+info4=  dicominfo('IM-0001-0004.dcm');
 
 
 
-anistropic_a=anisodiff2D(a,15,1/7,30,2); 
-%function downloaded from https://www.mathworks.com/matlabcentral/fileexchange/14995-anisotropic-diffusion-perona-malik
-
-% The idea behind image diffusion is to reduce image noise while keeping
-% edges around. This will allow for easier detection of edges. 
-
-% Might be pointless. 
-
-subplot(2,1,2)
-imagesc(anistropic_a)
-colormap gray
-axis image
-
-
-%% 4/10/20 Gunjan 
-
-% trying to convert anistropic_a into grayscale, but rgb2gray built in
-% command is not working. Is the image already in grayscale? 
-
-
-
-sout=imresize(anistropic_a,[256,256]);
-t0=60;
-th=t0+((max(anistropic_a(:))+min(anistropic_a(:)))./2);
-for i=1:1:size(anistropic_a,1)
-    for j=1:1:size(anistropic_a,2)
-        if anistropic_a(i,j)>th
-            sout(i,j)=1;
-        else
-            sout(i,j)=0;
-        end
-    end
-end
-
-
-%% morphological operation
-
-% this should be extracting out the atrial fibrilation lesion area. But
-% it's not. Need to thoroughly understand the code to see what's going on. 
-
-label=bwlabel(sout);
-stats=regionprops(logical(sout),'Solidity','Area','BoundingBox');
-density=[stats.Solidity];
-area=[stats.Area];
-high_dense_area=density>0.6;
-max_area=max(area(high_dense_area));
-tumor_label=find(area==max_area);
-tumor=ismember(label,tumor_label);
-
-if max_area>100
-   figure;
-   imshow(tumor)
-   title('tumor alone','FontSize',20);
-else
-    h = msgbox('No Tumor!!','status');
-    %disp('no tumor');
-    return;
-end
 
 %% 4/12/20 Andrew (updated 4/13 with imfreehand commands)
 
@@ -160,6 +71,28 @@ ROI_d = imfreehand;
 %% Tanner 4/13/20 
 % this is purely for viewing the slices in 3D
 D = cat(3,a,b,c,d);
+
+cubic_pixels = nnz(D)
+width = 512; % width and height of all 4 images are the same
+height = 368;
+bitDepth = 12;
+% Bit detph represents number of integer levels used to encode intensity in
+% an image. A 1 bit image has only 2 possible values: 0 or 1. 2 bit image
+% has 4 possible values: 0,1,2, and 3. With 12 bit image, we have 4096
+% possible values. 
+
+sliceThickness = 4; %in mm
+sliceSpacing = 4; % in mm
+% slice spacing is called "spacing between splices" in dicom metadata.
+% After lots of googling, it is my understanding that when spacing of
+% splices and slicethickness are the same value, it means that the slices
+% were taken contiguously. As in, there is no gap between the slices. If
+% the slice spacing value was smaller than thickness, that would have meant
+% overlap between slices. If the spacing value was larger, that would have
+% meant gap between slices. 
+
+% We only need to consider splice thickness for z value
+
 figure
 colormap gray
 contourslice(D,[],[],[1,2,3,4,27],15);
@@ -184,7 +117,7 @@ a_adapthisteq = adapthisteq(a);
 
 
 figure(5)
-imshow(a_imadjust)% This is the best way to improve contrast that I have found
+imshow(a_imadjust)
 % NEW CODE FROM HERE ONWARDS
 axis on;
 title('Original MRI image');
