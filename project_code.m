@@ -34,7 +34,6 @@ info4=  dicominfo('IM-0001-0004.dcm');
 
 
 
-
 %% 4/12/20 Andrew (updated 4/13 with imfreehand commands)
 
 % trying out different image adjustment techniques to improve contrast
@@ -92,6 +91,17 @@ sliceSpacing = 4; % in mm
 % meant gap between slices. 
 
 % We only need to consider splice thickness for z value
+
+info2.PixelSpacing;
+% ans =
+% 
+%     0.6250 ; in mm
+%     0.6250 ; in mm
+
+
+% PixelSpacing is another parameter available in dicom metadata.
+% The first value is the vertical spacing between two adjacent pixels
+% The second value is horizontal spacing between two adjacent pixels.
 
 figure
 colormap gray
