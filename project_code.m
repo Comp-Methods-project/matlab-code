@@ -537,3 +537,7 @@ info2.PixelSpacing;
 % The first value is the vertical spacing between two adjacent pixels
 % The second value is horizontal spacing between two adjacent pixels.
 
+% pixelspacing squared * 4mm  = mm cube /pixel 
+
+%
+%g input in a while loop
