@@ -135,9 +135,10 @@ centerofMass = measurements.WeightedCentroid;
 perimeter = measurements.Perimeter;
 
 
-% Calculating the area from the pixels selected by user
+% Calculating the area and volume from the pixels selected by user
 numberofPixels1=sum(binaryImage(:))
 numberofPixels2=bwarea(binaryImage)
+Volume = (.625^2)*4*numberofPixels1
 
 % Getting the coordinates of the boundary of MRI region selected by the
 % user
@@ -213,7 +214,7 @@ plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth'
 plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
 
 % report the results of the calculation
-message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.', meanGL,sdGL,numberofPixels1,numberofPixels2,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2));
+message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nVolume of ROI=%.2f', meanGL,sdGL,numberofPixels1,Volume);
 msgbox(message);
 
 %% so here is the same code as above repeated for each image. I know you guys are using DICOM so just switch that out for the png.
