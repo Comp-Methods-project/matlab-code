@@ -630,7 +630,7 @@ if value>.5 & value<1.5;
     plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth',2);
     plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
     volume=(.625^2)*4*numberofPixels1;
-    message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.\nVolume=%.2fmm^3', meanGL,sdGL,numberofPixels1,numberofPixels2d,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2),volume);
+    message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.\nVolume=%.2fmm^3', meanGL,sdGL,numberofPixels1,numberofPixels2,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2),volume);
     msgbox(message);
 
 elseif value>1.5 & value<2.5;
@@ -730,7 +730,7 @@ elseif value>1.5 & value<2.5;
     plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
     % report the results of the calculation
     volume=(.625^2)*4*numberofPixels1;
-    message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.\nVolume=%.2fmm^3', meanGL,sdGL,numberofPixels1,numberofPixels2d,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2),volume);
+    message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.\nVolume=%.2fmm^3', meanGL,sdGL,numberofPixels1,numberofPixels2b,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2),volume);
     msgbox(message);
     
 elseif value>2.5 & value<3.5;
@@ -810,7 +810,7 @@ elseif value>2.5 & value<3.5;
     plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth',2);
     plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
     volume=(.625^2)*4*numberofPixels1;
-    message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.\nVolume=%.2fmm^3', meanGL,sdGL,numberofPixels1,numberofPixels2d,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2),volume);
+    message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nArea in pixels=%.2f\nPerimeter = %.2f\nCentroid @ (x,y) = (%.1f,%.1f)\n Center of Mass @ (x,y) = (%.1f,%.1f)\nBlue crosshairs @ centroid.\n Green crosshairs @ center of mass.\nVolume=%.2fmm^3', meanGL,sdGL,numberofPixels1,numberofPixels2c,perimeter,centroid(1),centroid(2),centerofMass(1),centerofMass(2),volume);
     msgbox(message);
 
 elseif value>3.5 & value<4.5;
