@@ -43,9 +43,12 @@ a_imadjust = imadjust(a);
 a_histeq = histeq(a);
 a_adapthisteq = adapthisteq(a);
 
+
 % figure(5)
 % montage({a,a_imadjust,a_histeq,a_adapthisteq},'Size',[1 4])
 % This was just to show the different options. Commenting out for now
+
+
 
 figure(5)
 imshow(a_imadjust) % This is the best way to improve contrast that I have found
@@ -55,17 +58,8 @@ b_imadjust = imadjust(b);
 c_imadjust = imadjust(c);
 d_imadjust = imadjust(d);
 
-figure(6)
-imshow(b_imadjust)
-ROI_b = imfreehand;
-
-figure(7)
-imshow(c_imadjust)
-ROI_c = imfreehand;
-
-figure(8)
-imshow(d_imadjust)
-ROI_d = imfreehand;
+dcmImagei = uint8(255 * mat2gray(a_imadjust));
+imwrite(dcmImagei,'HU_dcmImage1.png');
 
 %% Tanner 4/13/20 
 % this is purely for viewing the slices in 3D
@@ -179,9 +173,9 @@ meanGL=mean(blackMaskedImage(binaryImage));
 sdGL = std(double(blackMaskedImage(binaryImage)));
 
 % Placing markeers at the centroid and center of mass
-hold on;
-plot(centroid(1),centroid(2),'b+','MarkerSize',20,'LineWidth',2);
-plot(centerofMass(1),centerofMass(2),'g+','MarkerSize',10,'LineWidth',2);
+% hold on;
+% plot(centroid(1),centroid(2),'b+','MarkerSize',20,'LineWidth',2);
+% plot(centerofMass(1),centerofMass(2),'g+','MarkerSize',10,'LineWidth',2);
 
 % Blackening inside the region
 insideMasked = a_imadjust;
@@ -210,8 +204,10 @@ title('Cropped Image');
 
 % Placing crosses at the centroid and center of mass
 hold on;
-plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth',2);
-plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
+plot(centroid(1)-leftColumn,centroid(2)-topLine);
+%plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth',2);
+%plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
+plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine);
 
 % report the results of the calculation
 message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nVolume of ROI=%.2f', meanGL,sdGL,numberofPixels1,Volume);
