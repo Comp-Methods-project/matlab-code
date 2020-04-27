@@ -75,35 +75,31 @@ axis tight
 
 
 %% Gunjan 4/14/20 
-% Code that outputs mean value of ROI, SD of ROI, area in pixels,
-% perimeter, Centroid, and Center of mass
+% Code that outputs area in pixels, and the volume of ROI
+
 
 
 clear
 clc
-% building on top of Andrew's brightness image code
 
-a = dicomread('IM-0001-0001.dcm');
-a_imadjust = imadjust(a);
-a_histeq = histeq(a);
-a_adapthisteq = adapthisteq(a);
-
-
-
+a = dicomread('IM-0001-0001.dcm'); % read DICOM file
+a_imadjust = imadjust(a); % adjust the image brightness
 figure(5)
-imshow(a_imadjust)
-% NEW CODE FROM HERE ONWARDS
+imshow(a_imadjust) % show the image
 axis on;
-title('Original MRI image');
+title('Original MRI image'); % Image title
 set(gcf,'Position',get(0,'Screensize')); %Maximizing the figure
 
 %Now asking user to draw on the image, after which we will apply a mask
 message =sprintf('Left click the mouse to begin drawing.\n Stop holding the mouse button to finish');
-uiwait(msgbox(message));
-ROI_a = imfreehand; %Line of code from Andrew that does the drawing
+uiwait(msgbox(message)); 
+ROI_a = imfreehand; %Line of code that allows user to select ROI
 binaryImage = ROI_a.createMask; %This is creating a mask from the ROI
 %Mask is basically a binary image of the ROI
 xy=ROI_a.getPosition;
+% After the user drew ROI, the masking line of code gave a pixel value of 1
+% to the image pixels belonging to ROI.  The rest of the pixels recieved a
+% value of 0, setting them up as part of the background
 
 
 %using subplots to show more images
@@ -114,25 +110,50 @@ drawnow;
 title('Original MRI image');
 
 
-% Now we display the mask that drawn by user
+% Now we display the mask that was drawn by user
 subplot(2,3,2);
 imshow(binaryImage);
 axis on;
 title('Binary mask of the MRI image');
 
-% Time to label the MRI image and compute the centroid and center of mass
-labeledImage=bwlabel(binaryImage);
-measurements = regionprops(binaryImage,a_imadjust, 'area','Centroid','WeightedCentroid','Perimeter');
-area = measurements.Area;
-centroid = measurements.Centroid;
-centerofMass = measurements.WeightedCentroid;
-perimeter = measurements.Perimeter;
+info1 = dicominfo('IM-0001-0001.dcm');
+% This is to look at metadata of DICOM file
+
+info1.PixelSpacing; % output in mm
+% ans =
+% 
+%     0.6250
+%     0.6250
+
+% The first value of pixel spacing is telling us the vertical spacing
+% between two adjacent pixels. 
+% The second value of pixel spacing is telling us horizontal spacing
+% between two adjacent pixels.
+
+info1.SliceThickness; % output in mm
+% ans =
+% 
+%      4
+
+% As the name suggests, this is giving us the z value of the slice
+
+info1.SpacingBetweenSlices; %output in mm
+% ans =
+% 
+%      4
+
+% Because this value is same as slice thickness, it means that there is no
+% gap between any of the four slices, assuming that they are concurrent.
 
 
-% Calculating the area and volume from the pixels selected by user
-numberofPixels1=sum(binaryImage(:))
-numberofPixels2=bwarea(binaryImage)
-Volume = (.625^2)*4*numberofPixels1
+% Calculating the number of pixels and volume from pixels selected by user
+numberofPixels1=sum(binaryImage(:));
+Volume = (.625^2)*4*numberofPixels1;
+% In calculating the ROI volume, we have to first calculate volume of
+% each pixel. Our length = .625 mm, width = .625mm, and height = 4mm. The
+% value of this calculation can be multiplied with total number of pixels
+% from ROI, which gives us our volume. 
+
 
 % Getting the coordinates of the boundary of MRI region selected by the
 % user
@@ -168,16 +189,9 @@ imshow(blackMaskedImage);
 axis on;
 title('Masked Outside Region');
 
-% Calculating the mean
-meanGL=mean(blackMaskedImage(binaryImage));
-sdGL = std(double(blackMaskedImage(binaryImage)));
 
-% Placing markeers at the centroid and center of mass
-% hold on;
-% plot(centroid(1),centroid(2),'b+','MarkerSize',20,'LineWidth',2);
-% plot(centerofMass(1),centerofMass(2),'g+','MarkerSize',10,'LineWidth',2);
-
-% Blackening inside the region
+% Code below is  setting the pixel values of ROI to 0 in the
+% original image. 
 insideMasked = a_imadjust;
 insideMasked(binaryImage) = 0;
 subplot(2,3,5);
@@ -202,15 +216,9 @@ imshow(croppedImage);
 axis 'on'
 title('Cropped Image');
 
-% Placing crosses at the centroid and center of mass
-hold on;
-plot(centroid(1)-leftColumn,centroid(2)-topLine);
-%plot(centroid(1)-leftColumn,centroid(2)-topLine,'b+','MarkerSize',20,'LineWidth',2);
-%plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine,'g+','MarkerSize',20,'LineWidth',2);
-plot(centerofMass(1)-leftColumn,centerofMass(2)-topLine);
 
 % report the results of the calculation
-message=sprintf('Mean value of ROI = %.3f\n SD of ROI = %.3f\nNumber of pixels =%d\nVolume of ROI=%.2f', meanGL,sdGL,numberofPixels1,Volume);
+message=sprintf('Number of pixels =%d\nVolume of ROI=%.2f',numberofPixels1,Volume);
 msgbox(message);
 
 %% so here is the same code as above repeated for each image. I know you guys are using DICOM so just switch that out for the png.
