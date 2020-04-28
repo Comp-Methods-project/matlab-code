@@ -36,7 +36,7 @@ imshow(binaryImage);
 axis on;
 title('Binary mask of the MRI image');
 
-info1 = dicominfo('IM-0001-0001.dcm');
+info1 = dicominfo('IM-0001-0001.dcm')
 % This is to look at metadata of DICOM file
 
 info1.PixelSpacing; % output in mm

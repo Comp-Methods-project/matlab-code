@@ -34,6 +34,7 @@ info4=  dicominfo('IM-0001-0004.dcm');
 
 
 
+
 %% 4/12/20 Andrew (updated 4/13 with imfreehand commands)
 
 % trying out different image adjustment techniques to improve contrast
