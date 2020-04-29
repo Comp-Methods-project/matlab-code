@@ -30,10 +30,10 @@
             
          
             
-  count = 1;           
+      
             
-while count <=long;
-    for i = 1<=long;
+
+    for i = 1:long;
     I=dicomread(fullfile(files{i}));
     a_imadjust=imadjust(I);
     imshow(a_imadjust);
@@ -115,5 +115,4 @@ Volume = (.625^2)*4*numberofPixels1;
     uiwait(msgbox(message));
     close all
     end
-    count = count +1
-end
+  
