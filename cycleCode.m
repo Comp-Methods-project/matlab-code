@@ -29,12 +29,13 @@
             
             
          
-            
+      count = 1;
       
-            
+      
+    while count <=long        
 
-    for i = 1:long;
-    I=dicomread(fullfile(files{i}));
+    
+    I=dicomread(fullfile(files{count}));
     a_imadjust=imadjust(I);
     imshow(a_imadjust);
     
@@ -109,10 +110,15 @@
     title('Cropped Image');
     
     numberofPixels1=sum(binaryImage(:));
-Volume = (.625^2)*4*numberofPixels1;
-    
+    numberofPixels2(count)=sum(binaryImage(:));
+    Volume = (.625^2)*4*numberofPixels1;
+    TotalVolume = (.625^2)*4*numberofPixels2;
     message=sprintf('Number of pixels =%d\nVolume of ROI=%.2f',numberofPixels1,Volume);
     uiwait(msgbox(message));
     close all
+    count = count+1;
     end
+  SumVolume = sum(TotalVolume);
   
+  message1=sprintf('Total volume from all selected slices =%.2fmm^3',SumVolume);
+  uiwait(msgbox(message1));
